@@ -1,0 +1,22 @@
+import { AmountDisplay } from "@components";
+import { FormatDate } from "@helpers";
+import { Expense } from "@schema";
+
+interface Props {
+  expense: Expense;
+}
+
+export const ExpenseDetail = ({ expense }: Props) => {
+  return (
+    <div className="bg-white shadow-lg p-10 w-full  border-b border-gray-200 flex gap-5 items-center">
+      <div></div>
+      <div>
+        <p>{expense.expenseName}</p>
+        <p className="text-slate-600 text-sm">
+          {FormatDate(expense.dateAmount!.toString())}
+        </p>
+      </div>
+      <AmountDisplay amount={expense.amount} />
+    </div>
+  );
+};

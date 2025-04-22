@@ -1,6 +1,11 @@
 import { useMemo } from "react";
 import { UseBudget } from "@hook";
-import { BudgetForm, BudgetTracker, ExpenseModal } from "@components";
+import {
+  BudgetForm,
+  BudgetTracker,
+  ExpenseModal,
+  ExpenseList,
+} from "@components";
 
 function App() {
   const { state } = UseBudget();
@@ -18,6 +23,7 @@ function App() {
       </div>
       {isValidBudget && (
         <main className="max-w-3xl mx-auto py-10">
+          <ExpenseList />
           <ExpenseModal />
         </main>
       )}
