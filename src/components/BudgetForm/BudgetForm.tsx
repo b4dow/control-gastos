@@ -1,22 +1,20 @@
 import { useMemo } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { z } from "zod";
-import { UseBudget } from "../hook";
-
-const BudgetFormSchema = z.object({
-  budget: z
-    .number({ message: "El presupuesto tiene que ser un número" })
-    .min(1, "El presupuesto debe ser mayor a 0"),
-});
-
-type BudgetFormType = z.infer<typeof BudgetFormSchema>;
+import { UseBudget } from "@hook";
+import { BudgetSchema, BudgetFormType } from "@schema";
+import { Input } from "@components";
 
 export const BudgetForm = () => {
   const { dispatch } = UseBudget();
 
-  const { register, handleSubmit, watch } = useForm<BudgetFormType>({
-    resolver: zodResolver(BudgetFormSchema),
+  const {
+    control,
+    handleSubmit,
+    watch,
+    formState: { errors },
+  } = useForm<BudgetFormType>({
+    resolver: zodResolver(BudgetSchema),
   });
 
   const HandleSubmit = (values: BudgetFormType) => {
@@ -33,11 +31,13 @@ export const BudgetForm = () => {
         <label className="text-4xl text-blue-600 font-bold text-center">
           Definir Presupuesto
         </label>
-        <input
+
+        <Input
           type="number"
-          className="w-full bg-white border border-gray-200 p-2"
+          name="budget"
           placeholder="Añade tu presupuesto"
-          {...register("budget", { valueAsNumber: true })}
+          control={control}
+          error={errors.budget}
         />
       </div>
 

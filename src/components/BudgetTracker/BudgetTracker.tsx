@@ -1,4 +1,4 @@
-import { AmountDisplay } from "./AmountDisplay";
+import { AmountDisplay } from "./components/";
 
 export const BudgetTracker = () => {
   return (

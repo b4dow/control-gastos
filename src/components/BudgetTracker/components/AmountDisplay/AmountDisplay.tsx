@@ -1,4 +1,4 @@
-import { FormatCurrency } from "../helpers/formatCurrency";
+import { FormatCurrency } from "@helpers";
 
 interface Props {
   label: string;

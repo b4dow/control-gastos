@@ -20,7 +20,16 @@
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true,
-    "noUncheckedSideEffectImports": true
+    "noUncheckedSideEffectImports": true,
+    "baseUrl": "./",
+    "paths": {
+      "@components": ["src/components"],
+      "@hook": ["src/hook"],
+      "@schema": ["src/schema"],
+      "@helpers": ["src/helpers"],
+      "@reducers": ["src/reducers"],
+      "@context": ["src/context"]
+    }
   },
   "include": ["src"]
 }

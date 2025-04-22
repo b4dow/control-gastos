@@ -4,7 +4,7 @@ import {
   BudgetReducer,
   BudgetState,
   InitialState,
-} from "../reducers/budget-reducer";
+} from "@reducers";
 
 export type BudgetContextType = {
   state: BudgetState;

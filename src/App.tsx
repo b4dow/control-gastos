@@ -1,6 +1,6 @@
 import { useMemo } from "react";
-import { UseBudget } from "./hook";
-import { BudgetForm, BudgetTracker, ExpenseModal } from "./components";
+import { UseBudget } from "@hook";
+import { BudgetForm, BudgetTracker, ExpenseModal } from "@components";
 
 function App() {
   const { state } = UseBudget();
