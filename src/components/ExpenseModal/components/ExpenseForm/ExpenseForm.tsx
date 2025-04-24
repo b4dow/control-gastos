@@ -1,33 +1,62 @@
 import { useForm } from "react-hook-form";
-import { categories } from "./data/categories";
+import { categories } from "@data/categories";
 import "react-datepicker/dist/react-datepicker.css";
 import "react-calendar/dist/Calendar.css";
 import { Select, Input, DatePicker } from "@components";
 import { DraftExpense, ExpenseSchema } from "@schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { UseBudget } from "@hook";
+import { useEffect } from "react";
 
 export const ExpenseForm = () => {
-  const { dispatch } = UseBudget();
+  const { dispatch, state, remainingBudget } = UseBudget();
+
   const {
     control,
     handleSubmit,
     reset,
+    setError,
     formState: { errors },
   } = useForm<DraftExpense>({
     resolver: zodResolver(ExpenseSchema),
   });
 
+  useEffect(() => {
+    if (state.editingId) {
+      const editingExpense = state.expenses.filter(
+        (expense) => expense.id === state.editingId,
+      )[0];
+      reset(editingExpense);
+    }
+  }, [state.editingId, reset, state.expenses]);
+
   const HandleSubmit = (values: DraftExpense) => {
-    // AGREGAR UN NUEVO GASTO
-    dispatch({ type: "ADD_EXPENSE", payload: { expense: values } });
-    reset();
+    // VALIDAR QUE NO EXCEDA EL PRESUPUESTO
+    if (values.amount > remainingBudget) {
+      setError("amount", {
+        type: "manual",
+        message: `la cantidad no puede superar el presupuesto restante de $${remainingBudget}`,
+      });
+      return;
+    }
+
+    // AGREGAR O ACTUALIZAR EL GASTO
+    if (state.editingId) {
+      dispatch({
+        type: "UPDATE_EXPENSE",
+        payload: { expense: { id: state.editingId, ...values } },
+      });
+      reset();
+    } else {
+      dispatch({ type: "ADD_EXPENSE", payload: { expense: values } });
+      reset();
+    }
   };
 
   return (
     <form className="space-y-5" onSubmit={handleSubmit(HandleSubmit)}>
       <legend className="uppercase text-center text-xl font-black border-b-4 py-2 border-blue-500">
-        Nuevo Gasto
+        {state.editingId ? "Editar Gasto" : "Nuevo Gasto"}
       </legend>
       <div className="flex flex-col gap-2">
         <label className="text-xl" htmlFor="expenseName">
@@ -80,7 +109,7 @@ export const ExpenseForm = () => {
       <input
         type="submit"
         className="bg-blue-600 cursor-pointer w-full p-2 text-white uppercase font-bold rounded-lg"
-        value="Registrar Gasto"
+        value={state.editingId ? "Guardar Cambios" : "Nuevo Gasto"}
       />
     </form>
   );
