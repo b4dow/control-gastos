@@ -1,5 +1,6 @@
 import { v4 as uuidv4 } from "uuid";
 import { DraftExpense, Expense } from "@schema";
+import { Category } from "@types";
 
 export type BudgetAction =
   | {
@@ -23,6 +24,13 @@ export type BudgetAction =
   | {
       type: "UPDATE_EXPENSE";
       payload: { expense: Expense };
+    }
+  | {
+      type: "RESET_APP";
+    }
+  | {
+      type: "ADD_FILTER_CATEGORY";
+      payload: { id: Category["id"] };
     };
 
 export type BudgetState = {
@@ -30,6 +38,7 @@ export type BudgetState = {
   modal: boolean;
   expenses: Expense[];
   editingId: Expense["id"];
+  currentCategory: Category["id"];
 };
 
 const initialBudget = (): number => {
@@ -47,6 +56,7 @@ export const InitialState: BudgetState = {
   modal: false,
   expenses: initialExpenses(),
   editingId: "",
+  currentCategory: "",
 };
 
 const createExpense = (draftExpense: DraftExpense): Expense => {
@@ -116,6 +126,21 @@ export const BudgetReducer = (
       ),
       modal: false,
       editingId: "",
+    };
+  }
+
+  if (action.type === "RESET_APP") {
+    return {
+      ...state,
+      expenses: [],
+      budget: 0,
+    };
+  }
+
+  if (action.type === "ADD_FILTER_CATEGORY") {
+    return {
+      ...state,
+      currentCategory: action.payload.id,
     };
   }
 
